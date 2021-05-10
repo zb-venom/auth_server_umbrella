@@ -48,9 +48,13 @@ const io = require("socket.io")(server, {
 
 io.on("connection", (socket) => {
   console.log("a user connected");
-  socket.on("iceData", function (data) {
+  socket.on("offerData", function (data) {
     console.log(data);
-    socket.broadcast.emit("iceData", data);
+    socket.broadcast.emit("offerData", data);
+  });
+  socket.on("answerData", function (data) {
+    console.log(data);
+    socket.broadcast.emit("answerData", data);
   });
 });
 
