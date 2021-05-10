@@ -1,4 +1,5 @@
 const express = require("express");
+const http = require("http");
 const dotenv = require("dotenv").config({ path: "./config/.env" });
 const cors = require("cors");
 const passport = require("passport");
@@ -38,6 +39,21 @@ app.use(function (err, req, res, next) {
   res.json({ error: err });
 });
 
-app.listen(PORT, () =>
+const server = http.createServer(app);
+const io = require("socket.io")(server, {
+  cors: {
+    origin: "*",
+  },
+});
+
+io.on("connection", (socket) => {
+  console.log("a user connected");
+  socket.on("iceData", function (data) {
+    console.log(data);
+    socket.broadcast.emit("iceData", data);
+  });
+});
+
+server.listen(PORT, () =>
   console.log(`\n\n[server] Server started on http://localhost:${PORT}`)
 );
