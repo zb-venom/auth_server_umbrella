@@ -30,8 +30,10 @@ app.use(cors());
 require("./auth/auth");
 
 const authRoute = require("./routes/auth.routes");
+const p2pRoute = require("./routes/p2p.routes");
 const appRoute = require("./routes/routes");
 app.use("/api/auth", authRoute);
+app.use("/api/p2p", passport.authenticate("jwt", { session: false }), p2pRoute);
 app.use(appRoute);
 
 app.use(function (err, req, res, next) {
@@ -40,20 +42,20 @@ app.use(function (err, req, res, next) {
 });
 
 const server = http.createServer(app);
-const io = require("socket.io")(server, {
+app.io = require("socket.io")(server, {
   cors: {
     origin: "*",
   },
 });
 
-io.on("connection", (socket) => {
-  console.log("a user connected");
+app.io.on("connection", (socket) => {
+  socket.on("join", function (room) {
+    socket.join(room);
+  });
   socket.on("offerData", function (data) {
-    console.log(data);
     socket.broadcast.emit("offerData", data);
   });
   socket.on("answerData", function (data) {
-    console.log(data);
     socket.broadcast.emit("answerData", data);
   });
 });

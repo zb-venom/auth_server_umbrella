@@ -19,10 +19,11 @@ exports.login = async (req, res, next) => {
       req.login(user, { session: false }, async (error) => {
         if (error) return next(error);
 
-        const body = { _id: user._id, email: user.email };
+        const body = { _id: user._id, email: user.email, username: user.name };
         const token = jwt.sign({ user: body }, process.env.TOKEN_SECRET);
 
         res.json({
+          user: body,
           token,
         });
       });
