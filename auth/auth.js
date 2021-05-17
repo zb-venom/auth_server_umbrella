@@ -17,15 +17,14 @@ passport.use(
     async (req, email, password, done) => {
       try {
         const user = await UserModel.create({
-          name: req.body.name,
+          username: req.body.name,
           email,
           password,
         });
 
         return done(null, user);
       } catch (error) {
-        if (error.code == 11000)
-          return done(`Email (${error.keyValue.email}) is busy`);
+        if (error.code == 11000) return done(`Email or username is busy`);
         else return done(error);
       }
     }
@@ -63,7 +62,7 @@ passport.use(
   new JWTstrategy(
     {
       secretOrKey: process.env.TOKEN_SECRET,
-      jwtFromRequest: ExtractJWT.fromUrlQueryParameter("secret_token"),
+      jwtFromRequest: ExtractJWT.fromHeader("authorization"),
     },
     async (token, done) => {
       try {
