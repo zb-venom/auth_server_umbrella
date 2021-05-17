@@ -73,7 +73,7 @@ app.io.on("connection", (socket) => {
   });
 
   socket.on("answerData", function (_id, global_id, data) {
-    app.io.to(global_id).emit("answer", _id, data);
+    app.io.to(global_id).emit("answerData", _id, data);
     // socket.broadcast.emit("answerData", data);
   });
 });
