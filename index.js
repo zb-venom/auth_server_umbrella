@@ -68,11 +68,13 @@ app.io.on("connection", (socket) => {
   });
 
   socket.on("offerData", function (_id, global_id, data) {
+    console.log("send offer from: " + _id + " to " + global_id);
     app.io.to(global_id).emit("offerData", _id, data);
     // socket.broadcast.emit("offerData", data);
   });
 
   socket.on("answerData", function (_id, global_id, data) {
+    console.log("send answer from: " + _id + " to " + global_id);
     app.io.to(global_id).emit("answerData", _id, data);
     // socket.broadcast.emit("answerData", data);
   });
